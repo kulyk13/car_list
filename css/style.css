@@ -38,7 +38,6 @@ li > i {
   display: flex;
   align-items: center;
   border-top: 2px solid #000;
-  padding: 20px 0 0 0;
 }
 select {
   padding: 4px;
@@ -50,8 +49,7 @@ select {
   border-radius: 5px;
 }
 .btn-search {
-  border: 2px solid hsl(209, 93%, 48%);
-  padding: 5.5px;
+  padding: 5px;
   border-radius: 5px;
 }
 .change-view {
@@ -67,7 +65,6 @@ select {
   width: 300px;
   height: 200px;
   object-fit: cover;
-  margin-right: 20px;
 }
 .card-title {
   font-size: 24px;
@@ -75,7 +72,6 @@ select {
 .card-price {
   font-size: 24px;
   font-weight: 700;
-  color: green;
 }
 .main-info {
   columns: 2;
@@ -94,12 +90,12 @@ select {
   align-items: center;
   border-radius: 5px;
 }
-.vin-block h4 {
+.vin-block span {
   color: #fff;
   font-size: 16px;
   font-weight: 700;
   background-color: blue;
-  padding: 5px;
+  box-shadow: 0 0 0 1px blue;
   border-radius: 3px 0 0 3px;
 }
 .card-vin {
@@ -112,12 +108,8 @@ select {
   column-gap: 20px;
 }
 .call-num {
-  padding: 10px;
-  background-color: blue;
-  color: #fff;
   font-size: 14px;
   font-weight: 700;
-  column-gap: 10px;
   border-radius: 5px;
 }
 .call-num:hover,

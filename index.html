@@ -24,20 +24,21 @@
       <div class="col-12 mt-3 mb-5 pt-3 top-bar">
         <select name="sort list" id="sortList">
           <option value="default">За замовчуванням</option>
-          <option value="from cheap to expensive">Від дешевих до дорогих
+          <option value="cheap">Від дешевих до дорогих
           </option>
-          <option value="from expensive to cheap">Від дорогих до дешевих
+          <option value="expensive">Від дорогих до дешевих
           </option>
-          <option value="date added">Дата додавання</option>
-          <option value="year of issue, ascending">Рік випуску, по зростанню
+          <option value="date">Дата додавання</option>
+          <option value="year-up">Рік випуску, по зростанню
           </option>
-          <option value="year of issue, in descending order">Рік випуску, по
+          <option value="year-down">Рік випуску, по
             спаданню</option>
-          <option value="mileage, ascending">Пробіг, по зростанню</option>
-          <option value="mileage, in descending order">Пробіг, по спаданню
+          <option value="mileage-up">Пробіг, по зростанню</option>
+          <option value="mileage-down">Пробіг, по спаданню
           </option>
         </select>
-        <form action="#" class="col-6 form" name="searchForm" id="searchForm">
+        <form action="#" class="col-6 form mx-auto" name="searchForm"
+          id="searchForm">
           <input class="col-10" type="search" name="search"
             placeholder="Вваедіть запит" aria-label="search car" required>
           <button class="btn-search btn-primary" type="submit"
@@ -52,71 +53,75 @@
       <div class="col-3 filter-bar"></div>
       <div class="col-9 card-list">
         <div class="row row-cols-1 g-0" id="cardList">
-          <div class="col card mb-3">
+          <!-- <div class="col card mb-3">
             <div class="row g-0">
               <div class="col-4">
-                <a href="index.html" target="_blank">
-                  <img class="card-img" width="1" height="1" loading="lazy"
+                <a href="#">
+                  <img class="card-img m-4" width="1" height="1" loading="lazy"
                     src="${card_data.img}"
                     alt="${card_data.make} ${card_data.model}" />
                 </a>
               </div>
               <div class="col-8">
                 <div class="card-body">
-                  <a href="index.html" target="_blank"
-                    class="card-title mb-3">${card_data.make} ${card_data.model}
+                  <a href="#" class="card-title mb-3">${card_data.make}
+                    ${card_data.model}
                     ${card_data.engine_volume} (${card_data.year})</a>
-                  <h3 class="card-price">${card_data.price} $</h3>
+                  <h3 class="card-price text-success">${card_data.price} $</h3>
+                  <h4 class="card-rating text-warning">${starIcons}
+                    ${card_data.rating}</h4>
                   <div class="card-info mt-4">
-                    <div class="main-info">
-                      <div class="info-unit mb-3">
+                    <ul class="main-info">
+                      <li class="mb-3">
                         <i class="fas fa-tachometer-alt"></i>
-                        ${card_data.odo} km
-                      </div>
-                      <div class="info-unit">
+                        ${card_data.odo ?? '---'} km
+                      </li>
+                      <li>
                         <i class="fas fa-gas-pump"></i>
-                        ${card_data.fuel}, ${card_data.engine_volume} l
-                      </div>
-                      <div class="info-unit mb-3">
+                        ${card_data.fuel}, ${card_data.engine_volume ?? '---'} l
+                      </li>
+                      <li class="mb-3">
                         <i class="fas fa-map-marker-alt"></i>
-                        ${card_data.country}
-                      </div>
-                      <div class="info-unit">
+                        ${card_data.country ?? '---'}
+                      </li>
+                      <li>
                         <i class="fas fa-cogs"></i>
                         ${card_data.transmission}
-                      </div>
-                    </div>
-                    <div class="fuel-consume mt-4 mb-4">
+                      </li>
+                    </ul>
+                    <div class="row fuel-consume mt-4 mb-4">
                       <h4>Витрати палива (л/100км):</h4>
-                      <div class="consume col-7 mt-3">
-                        <div class="info-unit">
+                      <ul class="consume col-7 mt-3 mb-0">
+                        <li>
                           <i class="fas fa-city"></i>
-                          ${card_data.consume.city}
-                        </div>
-                        <div class="info-unit">
+                          ${card_data.consume?.city ?? '---'}
+                        </li>
+                        <li>
                           <i class="fas fa-road"></i>
-                          ${card_data.consume.road}
-                        </div>
-                        <div class="info-unit">
+                          ${card_data.consume?.road ?? '---'}
+                        </li>
+                        <li>
                           <i class="fas fa-exchange-alt"></i>
-                          ${card_data.consume.mixed}
-                        </div>
-                      </div>
+                          ${card_data.consume?.mixed ?? '---'}
+                        </li>
+                      </ul>
                     </div>
-                    <div class="vin-block col-5">
-                      <h4>VIN</h4>
+                    ${card_data.vin ? `<div class="vin-block pe-3">
+                      <span class="p-1 me-3">VIN</span>
                       <div class="card-vin">${card_data.vin}</div>
-                    </div>
-                    <div class="color mt-4">Колір: ${card_data.color}</div>
+                    </div>` : ''}
+                    ${card_data.color ? `<div class="color mt-4">Колір:
+                      ${card_data.color}</div>` : ''}
                     <div class="contact-block mt-4">
-                      <a href="tel:${card_data.phone}" class="call-num">
-                        <i class="fas fa-phone-alt"></i>
+                      <a href="tel:${card_data.phone}"
+                        class=" btn btn-primary call-num">
+                        <i class="fas fa-phone-alt me-1"></i>
                         Подзвонити
                       </a>
-                      <p>${card_data.seller}</p>
+                      <p class="mb-0">${card_data.seller}</p>
                     </div>
-                    <div class="save-star btn-secondary"><i
-                        class="far fa-star"></i></div>
+                    <button type="button" class="save-star btn-secondary"><i
+                        class="fas fa-star"></i></button>
                   </div>
                 </div>
               </div>
@@ -131,10 +136,11 @@
                 </small>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- JavaScript Bundle with Popper -->
