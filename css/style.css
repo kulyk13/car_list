@@ -85,7 +85,6 @@ select {
   justify-content: space-between;
 }
 .vin-block {
-  border: 2px solid blue;
   display: inline-flex;
   align-items: center;
   border-radius: 5px;
@@ -94,9 +93,21 @@ select {
   color: #fff;
   font-size: 16px;
   font-weight: 700;
-  background-color: blue;
-  box-shadow: 0 0 0 1px blue;
   border-radius: 3px 0 0 3px;
+}
+.vin-block.check {
+  border: 2px solid green;
+}
+.vin-block.check span {
+  background-color: green;
+  box-shadow: 0 0 0 1px green;
+}
+.vin-block.uncheck {
+  border: 2px solid #ffc107;
+}
+.vin-block.uncheck span {
+  background-color: #ffc107;
+  box-shadow: 0 0 0 1px #ffc107;
 }
 .card-vin {
   text-align: center;

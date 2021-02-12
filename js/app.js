@@ -51,9 +51,11 @@ function createCardHTML(card_data) {
   for (let i = 0; i < 5; i++) {
     if (card_data.rating > i) {
       starIcons += `<i class="fas fa-star"></i>`
-  } /*else if () {
-      starIcons += `<i class="fas fa-star-half"></i>`
-  }*/ else {
+      if (!Number.isInteger(card_data.rating)) {
+        Math.floor(card_data.rating);
+        starIcons += `<i class="fas fa-star-half"></i>`
+      }
+  } else {
       starIcons += `<i class="far fa-star"></i>`
     }
   }
@@ -110,7 +112,7 @@ function createCardHTML(card_data) {
               </li>
             </ul>
           </div>
-          ${card_data.vin ? `<div class="vin-block pe-3">
+          ${card_data.vin ? `<div class="vin-block pe-3 ${card_data.vin_check ? 'check' : 'uncheck'}">
             <span class="p-1 me-3">VIN</span>
             <div class="card-vin">${card_data.vin}</div>
           </div>` : ''}
