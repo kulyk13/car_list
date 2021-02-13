@@ -1,5 +1,7 @@
 let CARS = JSON.parse(DATA)
 const cardListEl = document.getElementById('cardList')
+const masonryBtnsEl = document.getElementById('masonryBtns')
+const sortSelectEl = document.getElementById('sortSelect')
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -24,11 +26,41 @@ const cardListEl = document.getElementById('cardList')
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
 
-cardListEl.addEventListener('click', event => {
-  console.log('click', event.target);
-  const btnEl = event.target.closest('.save-star')
+sortSelectEl.addEventListener('change', function () {
+  if (this.value == 'default') {
+    CARS = JSON.parse(DATA)
+  } else {
+    // console.log(value.split('-'));
+    let [key, type] = this.value.split('-')
+    CARS.sort((a,b) => {
+      if (type == 'ab') {
+        return a[key] - b[key]
+      } else if (type == 'ba') {
+        return b[key] - a[key]
+      }
+    })
+  }
+  renderCards(CARS, cardListEl);
+})
+
+masonryBtnsEl.addEventListener('click', event => {
+  const btnEl = event.target.closest('.btn-change')
   if (btnEl) {
-    console.log('click on save btn!');
+    let action = btnEl.dataset.action
+    if (action == '1') {
+      cardListEl.classList.add('row-cols-1')
+      cardListEl.classList.remove('row-cols-2')
+    } else if (action == '2') {
+      cardListEl.classList.add('row-cols-2')
+      cardListEl.classList.remove('row-cols-1')
+    }
+
+    findSiblings(btnEl).forEach(btn => {
+      btn.classList.remove('btn-success')
+      btn.classList.add('btn-secondary')
+    })
+    btnEl.classList.remove('btn-secondary')
+    btnEl.classList.add('btn-success')
   }
 })
 
@@ -49,26 +81,24 @@ function renderCards(data_array, element) {
 function createCardHTML(card_data) {
   let starIcons = ''
   for (let i = 0; i < 5; i++) {
-    if (card_data.rating > i) {
+    if (card_data.rating - 0.5 > i) {
       starIcons += `<i class="fas fa-star"></i>`
-      if (!Number.isInteger(card_data.rating)) {
-        Math.floor(card_data.rating);
-        starIcons += `<i class="fas fa-star-half"></i>`
-      }
-  } else {
+    } else if (card_data.rating > i) {
+      starIcons += `<i class="fas fa-star-half-alt"></i>`
+    } else {
       starIcons += `<i class="far fa-star"></i>`
     }
   }
   return `<div class="col card mb-3">
   <div class="row g-0">
-    <div class="col-4">
-      <a href="#">
-        <img class="card-img m-4" width="1" height="1" loading="lazy"
+    <div class="col-4 card-img-wrap">
+      <a href="#" class="w-100">
+        <img class="card-img" width="1" height="1" loading="lazy"
           src="${card_data.img}"
           alt="${card_data.make} ${card_data.model}" />
       </a>
     </div>
-    <div class="col-8">
+    <div class="col-8 card-body-wrap">
       <div class="card-body">
         <a href="#" class="card-title mb-3">${card_data.make}
           ${card_data.model}
@@ -144,19 +174,29 @@ function createCardHTML(card_data) {
 </div>`
 }
 
+//Utils
+
+function findSiblings(DOMelement) {
+  // const parent = DOMelement.parentElement
+  // const children = parent.children
+  // const siblings = [...children].filter(el => el != DOMelement)
+  // return siblings
+  return [...DOMelement.parentElement.children].filter(el => el != DOMelement)
+}
 
 
 
 
 
 
+// const arr = [5,9,4,2,10,7,11,3,1,12,6,8]
 
- const testBtn = document.getElementById('testBtn')
+// arr.sort((a,b) => {
+//   return b-a
+// })
+// console.log(arr);
 
- testBtn.addEventListener('click', event => {
-   console.log(event);
- })
 
-testBtn.click()
+
 
 

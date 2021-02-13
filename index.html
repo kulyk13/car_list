@@ -22,20 +22,16 @@
     <h1 class="main-title pt-4">Car list</h1>
     <div class="row">
       <div class="col-12 mt-3 mb-5 pt-3 top-bar">
-        <select name="sort list" id="sortList">
+        <select name="sortSelect" class="sort-select" id="sortSelect">
           <option value="default">За замовчуванням</option>
-          <option value="cheap">Від дешевих до дорогих
-          </option>
-          <option value="expensive">Від дорогих до дешевих
-          </option>
-          <option value="date">Дата додавання</option>
-          <option value="year-up">Рік випуску, по зростанню
-          </option>
-          <option value="year-down">Рік випуску, по
-            спаданню</option>
-          <option value="mileage-up">Пробіг, по зростанню</option>
-          <option value="mileage-down">Пробіг, по спаданню
-          </option>
+          <option value="price-ab">Від дешевих до дорогих</option>
+          <option value="price-ba">Від дорогих до дешевих</option>
+          <option value="timestamp-ba">Дата додавання</option>
+          <option value="year-ab">Рік випуску, по зростанню</option>
+          <option value="year-ba">Рік випуску, по спаданню</option>
+          <option value="odo-ab">Пробіг, по зростанню</option>
+          <option value="odo-ba">Пробіг, по спаданню </option>
+          <option value="make-ab">По виробнику, а-я</option>
         </select>
         <form action="#" class="col-6 form mx-auto" name="searchForm"
           id="searchForm">
@@ -44,15 +40,16 @@
           <button class="btn-search btn-primary" type="submit"
             aria-label="search">Пошук</button>
         </form>
-        <div class="change-view col-2">
-          <button type="button" class="btn-change btn-success fas fa-bars"
-            id="testBtn"></button>
-          <button type="button" class="btn-change fas fa-border-all"></button>
+        <div class="change-view col-2" id="masonryBtns">
+          <button data-action="1"  type="button" class="btn-change btn-success btn" ><i class="fas fa-bars"></i></button>
+          <button data-action="2"  type="button" class="btn-change btn btn-secondary">
+            <i class="fas fa-border-all"></i>
+          </button>
         </div>
       </div>
       <div class="col-3 filter-bar"></div>
-      <div class="col-9 card-list">
-        <div class="row row-cols-1 g-0" id="cardList">
+      <div class="col-9 ">
+        <div class="row row-cols-1 g-0 card-list" id="cardList">
           <!-- <div class="col card mb-3">
             <div class="row g-0">
               <div class="col-4">
