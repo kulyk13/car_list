@@ -39,18 +39,8 @@ li > i {
   align-items: center;
   border-top: 2px solid #000;
 }
-select {
-  padding: 4px;
-  border-radius: 5px;
-  border: 2px solid;
-}
-.form input {
-  padding: 4px;
-  border-radius: 5px;
-}
-.btn-search {
-  padding: 5px;
-  border-radius: 5px;
+.form-select {
+  width: 25%;
 }
 .change-view {
   column-gap: 15px;
@@ -61,13 +51,14 @@ select {
   padding: 6px 7px;
   border-radius: 5px;
 }
-.card-list.row-cols-2{
+.card-list.row-cols-2 {
   justify-content: space-between;
 }
-.card-list.row-cols-2>.col{
+.card-list.row-cols-2 > .col {
   width: 49%;
 }
-.card-list.row-cols-2 .card-img-wrap,.card-list.row-cols-2 .card-body-wrap{
+.card-list.row-cols-2 .card-img-wrap,
+.card-list.row-cols-2 .card-body-wrap {
   width: 100%;
 }
 .card-img {
@@ -77,6 +68,8 @@ select {
 }
 .card-title {
   font-size: 24px;
+}
+.card-list.row-cols-2 .card-title {
   height: 72px;
 }
 .card-price {
@@ -119,6 +112,14 @@ select {
   background-color: #ffc107;
   box-shadow: 0 0 0 1px #ffc107;
 }
+.vin-block.undefined {
+  border: 2px solid #ff0707;
+  width: 234px;
+}
+.vin-block.undefined span {
+  background-color: #ff0707;
+  box-shadow: 0 0 0 1px #ff0707;
+}
 .card-vin {
   text-align: center;
   margin: 0 auto;
@@ -143,7 +144,7 @@ select {
   border-radius: 5px;
   padding: 5px;
   top: 18px;
-  right: 30px;
+  right: 15px;
   font-size: 22px;
 }
 .save-star:hover,

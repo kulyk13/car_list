@@ -5,7 +5,7 @@ const DATA = JSON.stringify([
     "model": "M3",
     "year": 2010,
     "img": "http://dummyimage.com/153x232.jpg/cc0000/ffffff",
-    "color": "Goldenrod",
+    "color": null,
     "vin": "1G6DW677550624991",
     "country": "United States",
     "rating": 1.5,
@@ -20,7 +20,7 @@ const DATA = JSON.stringify([
     "engine_volume": 1.4,
     "transmission": "CVT",
     "odo": 394036,
-    "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
+    "consume": { "road": null, "city": 12.3, "mixed": 8.4 }
   },
   {
     "id": "9e952900c4a6fc66d35f00eac9785d97d3c77234",
@@ -43,7 +43,7 @@ const DATA = JSON.stringify([
     "engine_volume": 2.7,
     "transmission": "AT",
     "odo": 160572,
-    "consume": { "road": 3.2, "city": 15.8, "mixed": 8.8 }
+    "consume": { "road": 3.2, "city": null, "mixed": 8.8 }
   },
   {
     "id": "303b3472b11d51c7d970108e3ec1a15476521ec3",
@@ -52,7 +52,7 @@ const DATA = JSON.stringify([
     "year": 1993,
     "img": "http://dummyimage.com/161x159.jpg/ff4444/ffffff",
     "color": "Red",
-    "vin": "JM1CW2BL5C0288424",
+    "vin": null,
     "country": "Poland",
     "rating": 2.5,
     "price": 2082,
@@ -66,7 +66,7 @@ const DATA = JSON.stringify([
     "engine_volume": 1.6,
     "transmission": "CVT",
     "odo": 418116,
-    "consume": { "road": 5.4, "city": 10.6, "mixed": 9.2 }
+    "consume": { "road": 5.4, "city": 10.6, "mixed": null }
   },
   {
     "id": "a6f0abf06ec6059b434a6cf95741a4f8cc6b5f29",
@@ -145,7 +145,7 @@ const DATA = JSON.stringify([
     "img": "http://dummyimage.com/226x236.jpg/dddddd/000000",
     "color": "Orange",
     "vin": "1G4GA5ER8CF100781",
-    "country": "Trinidad and Tobago",
+    "country": "Trinidad Tobago",
     "rating": 2,
     "price": 4235,
     "views": 17,

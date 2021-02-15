@@ -1,7 +1,11 @@
-let CARS = JSON.parse(DATA)
-const cardListEl = document.getElementById('cardList')
-const masonryBtnsEl = document.getElementById('masonryBtns')
-const sortSelectEl = document.getElementById('sortSelect')
+// Global variables
+let CARS = JSON.parse(DATA);
+const cardListEl = document.getElementById('cardList');
+const masonryBtnsEl = document.getElementById('masonryBtns');
+const sortSelectEl = document.getElementById('sortSelect');
+const searchFormEl = document.getElementById('searchForm');
+
+
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -26,23 +30,32 @@ const sortSelectEl = document.getElementById('sortSelect')
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
 
+
+// Sort form
 sortSelectEl.addEventListener('change', function () {
   if (this.value == 'default') {
     CARS = JSON.parse(DATA)
   } else {
-    // console.log(value.split('-'));
+    console.log(this.value.split('-'));
     let [key, type] = this.value.split('-')
     CARS.sort((a,b) => {
-      if (type == 'ab') {
-        return a[key] - b[key]
-      } else if (type == 'ba') {
-        return b[key] - a[key]
+      if (typeof [key] === 'string') {
+        [key].toLowerCase();
+        a[key].localeCompare(b[key]);
+      }
+      else {
+        if (type == 'ab') {
+          return a[key] - b[key]
+        } else if (type == 'ba') {
+          return b[key] - a[key]
+        }
       }
     })
   }
   renderCards(CARS, cardListEl);
 })
 
+// Change cards view
 masonryBtnsEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.btn-change')
   if (btnEl) {
@@ -64,6 +77,22 @@ masonryBtnsEl.addEventListener('click', event => {
   }
 })
 
+// Event listener on save star
+cardListEl.addEventListener('click', event => {
+  const btnEl = event.target.closest('.save-star');
+  if (btnEl) {
+    console.log('click on save-star');
+  }
+});
+
+// Event listener on search form
+searchFormEl.addEventListener('click', event => {
+  event.preventDefault();
+  const btnSearchEl = event.target.closest('.btn-search');
+  if (btnSearchEl) {
+    console.log('click on btn-search');
+  }
+})
 
 renderCards(CARS, cardListEl);
 
@@ -145,8 +174,11 @@ function createCardHTML(card_data) {
           ${card_data.vin ? `<div class="vin-block pe-3 ${card_data.vin_check ? 'check' : 'uncheck'}">
             <span class="p-1 me-3">VIN</span>
             <div class="card-vin">${card_data.vin}</div>
-          </div>` : ''}
-          ${card_data.color ? `<div class="color mt-4">Колір: ${card_data.color}</div>` : ''}
+          </div>` : `<div class="vin-block pe-3 undefined">
+          <span class="p-1 me-3">VIN</span>
+          <div class="card-vin">Невідомий</div>
+        </div>`}
+          <div class="color mt-4">Колір: ${card_data.color  ?? 'Невідомий'}</div>
           <div class="contact-block mt-4">
             <a href="tel:${card_data.phone}"
               class=" btn btn-primary call-num">
@@ -155,7 +187,7 @@ function createCardHTML(card_data) {
             </a>
             <p class="mb-0">${card_data.seller}</p>
           </div>
-          <button type="button" class="save-star btn-secondary"><i
+          <button type="button" class="save-star btn btn-secondary"><i
               class="fas fa-star"></i></button>
         </div>
       </div>

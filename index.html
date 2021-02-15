@@ -21,8 +21,9 @@
   <div class="container">
     <h1 class="main-title pt-4">Car list</h1>
     <div class="row">
-      <div class="col-12 mt-3 mb-5 pt-3 top-bar">
-        <select name="sortSelect" class="sort-select" id="sortSelect">
+      <div class="col-12 mt-3 mb-5 pt-3 g-0 top-bar">
+        <select name="sortSelect" class="form-select" id="sortSelect"
+          aria-label="Default select example">
           <option value="default">За замовчуванням</option>
           <option value="price-ab">Від дешевих до дорогих</option>
           <option value="price-ba">Від дорогих до дешевих</option>
@@ -31,35 +32,41 @@
           <option value="year-ba">Рік випуску, по спаданню</option>
           <option value="odo-ab">Пробіг, по зростанню</option>
           <option value="odo-ba">Пробіг, по спаданню </option>
-          <option value="make-ab">По виробнику, а-я</option>
+          <option value="make-ab">Марка автомобіля, a-z</option>
         </select>
         <form action="#" class="col-6 form mx-auto" name="searchForm"
           id="searchForm">
-          <input class="col-10" type="search" name="search"
-            placeholder="Вваедіть запит" aria-label="search car" required>
-          <button class="btn-search btn-primary" type="submit"
-            aria-label="search">Пошук</button>
+          <div class="input-group">
+            <input type="search" class="form-control"
+              placeholder="Введіть запит" aria-label="Search car"
+              aria-describedby="button-addon2" required>
+            <button class="btn-search btn btn-outline-secondary" type="submit"
+              aria-label="search" value="hello">Пошук</button>
+          </div>
         </form>
         <div class="change-view col-2" id="masonryBtns">
-          <button data-action="1"  type="button" class="btn-change btn-success btn" ><i class="fas fa-bars"></i></button>
-          <button data-action="2"  type="button" class="btn-change btn btn-secondary">
+          <button data-action="1" type="button"
+            class="btn-change btn-success btn"><i
+              class="fas fa-bars"></i></button>
+          <button data-action="2" type="button"
+            class="btn-change btn btn-secondary">
             <i class="fas fa-border-all"></i>
           </button>
         </div>
       </div>
       <div class="col-3 filter-bar"></div>
-      <div class="col-9 ">
+      <div class="col-9 g-0">
         <div class="row row-cols-1 g-0 card-list" id="cardList">
           <!-- <div class="col card mb-3">
             <div class="row g-0">
-              <div class="col-4">
-                <a href="#">
-                  <img class="card-img m-4" width="1" height="1" loading="lazy"
+              <div class="col-4 card-img-wrap">
+                <a href="#" class="w-100">
+                  <img class="card-img" width="1" height="1" loading="lazy"
                     src="${card_data.img}"
                     alt="${card_data.make} ${card_data.model}" />
                 </a>
               </div>
-              <div class="col-8">
+              <div class="col-8 card-body-wrap">
                 <div class="card-body">
                   <a href="#" class="card-title mb-3">${card_data.make}
                     ${card_data.model}
@@ -103,12 +110,14 @@
                         </li>
                       </ul>
                     </div>
-                    ${card_data.vin ? `<div class="vin-block pe-3">
+                    ${card_data.vin ? `<div class="vin-block pe-3 ${card_data.vin_check ? 'check' : 'uncheck'}">
                       <span class="p-1 me-3">VIN</span>
                       <div class="card-vin">${card_data.vin}</div>
-                    </div>` : ''}
-                    ${card_data.color ? `<div class="color mt-4">Колір:
-                      ${card_data.color}</div>` : ''}
+                    </div>` : `<div class="vin-block pe-3 undefined">
+                    <span class="p-1 me-3">VIN</span>
+                    <div class="card-vin">Невідомий</div>
+                  </div>`}
+                    <div class="color mt-4">Колір: ${card_data.color  ?? 'Невідомий'}</div>
                     <div class="contact-block mt-4">
                       <a href="tel:${card_data.phone}"
                         class=" btn btn-primary call-num">
@@ -117,7 +126,7 @@
                       </a>
                       <p class="mb-0">${card_data.seller}</p>
                     </div>
-                    <button type="button" class="save-star btn-secondary"><i
+                    <button type="button" class="save-star btn btn-secondary"><i
                         class="fas fa-star"></i></button>
                   </div>
                 </div>
