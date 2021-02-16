@@ -4,8 +4,18 @@ const cardListEl = document.getElementById('cardList');
 const masonryBtnsEl = document.getElementById('masonryBtns');
 const sortSelectEl = document.getElementById('sortSelect');
 const searchFormEl = document.getElementById('searchForm');
+const dateFormatter = new Intl.DateTimeFormat()
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit'
+})
 
 
+if (!localStorage.wishList) {
+  localStorage.wishList = JSON.stringify([])
+}
+const wishListLS = JSON.parse(localStorage.wishList)
+const exchangeRateUSD = 27.8569
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -38,22 +48,40 @@ sortSelectEl.addEventListener('change', function () {
   } else {
     console.log(this.value.split('-'));
     let [key, type] = this.value.split('-')
-    CARS.sort((a,b) => {
-      if (typeof key === 'string') {
-        key.toLowerCase();
-        a[key].localeCompare(b[key]);
+    console.time('sorting ->>')
+    if (typeof CARS[0][key] === 'string') {
+      if (type == 'ab') {
+        CARS.sort((a, b) => a[key].localeCompare(b[key]))
+      } else if (type == 'ba') {
+        CARS.sort((a, b) => b[key].localeCompare(a[key]))
       }
-      else {
-        if (type == 'ab') {
-          return a[key] - b[key]
-        } else if (type == 'ba') {
-          return b[key] - a[key]
-        }
+    }
+    else if (typeof CARS[0][key] === 'number') {
+      if (type == 'ab') {
+        CARS.sort((a, b) => a[key] - b[key])
+      } else if (type == 'ba') {
+        CARS.sort((a, b) => b[key] - a[key])
       }
-    })
+    }
+    console.timeEnd('sorting ->>')
   }
   renderCards(CARS, cardListEl);
 })
+
+// if (typeof CARS[0][key] === 'string') {
+//   if (type == 'ab') {
+//     CARS.sort((a,b) => a[key].localeCompare(b[key]))
+//   } else if (type == 'ba') {
+//     CARS.sort((a,b) => b[key].localeCompare(a[key]))
+//   }
+// }
+// else if (typeof CARS[0][key] === 'number'){
+//   if (type == 'ab') {
+//     CARS.sort((a,b) => a[key] - b[key])
+//   } else if (type == 'ba') {
+//     CARS.sort((a,b) => b[key] - a[key])
+//   }
+// }
 
 // Change cards view
 masonryBtnsEl.addEventListener('click', event => {
@@ -82,16 +110,34 @@ cardListEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.save-star');
   if (btnEl) {
     console.log('click on save-star');
+    const id = btnEl.closest('.card').dataset.id
+    console.log(id);
+    if (!wishListLS.includes(id)) {
+      wishListLS.push(id)
+      btnEl.classList.add('text-warning')
+    } else{
+      wishListLS.splice(wishListLS.indexOf(id),1)
+      btnEl.classList.remove('text-warning')
+    }
+    localStorage.wishList = JSON.stringify(wishListLS)
+    btnEl.blur()
   }
 });
 
 // Event listener on search form
-searchFormEl.addEventListener('click', event => {
+searchFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
-  const btnSearchEl = event.target.closest('.btn-search');
-  if (btnSearchEl) {
-    console.log('click on btn-search');
-  }
+  let query = this.search.value.toLowerCase().trim().split(' ')//[mustang, ford]
+  console.log(query);
+  const searchFields = ['make', 'model', 'year']
+  const filteredCars = CARS.filter(car => {
+    return query.every(word => {
+      return !word || searchFields.some(field => {
+        return `${car[field]}`.toLowerCase().trim().includes(word)
+      })
+    })
+  })
+  renderCards(filteredCars, cardListEl);
 })
 
 renderCards(CARS, cardListEl);
@@ -99,12 +145,15 @@ renderCards(CARS, cardListEl);
 
 function renderCards(data_array, element) {
   let html = '';
-  data_array.forEach(car => {
-    html += createCardHTML(car)
-  });
+  if (data_array.length > 0) {
+    data_array.forEach(car => {
+      html += createCardHTML(car)
+    });
+  } else {
+    html = `<h2 class="text-center text-danger">No cars! :((</h2>`
+  }
   element.innerHTML = html;
 };
-
 
 
 function createCardHTML(card_data) {
@@ -118,7 +167,7 @@ function createCardHTML(card_data) {
       starIcons += `<i class="far fa-star"></i>`
     }
   }
-  return `<div class="col card mb-3">
+  return `<div class="col card mb-3" data-id="${card_data.id}">
   <div class="row g-0">
     <div class="col-4 card-img-wrap">
       <a href="#" class="w-100">
@@ -132,7 +181,7 @@ function createCardHTML(card_data) {
         <a href="#" class="card-title mb-3">${card_data.make}
           ${card_data.model}
           ${card_data.engine_volume} (${card_data.year})</a>
-        <h3 class="card-price text-success">${card_data.price} $</h3>
+        <h3 class="card-price text-success">${card_data.price}  ${card_data.price * exchangeRateUSD}</h3>
         <h4 class="card-rating text-warning">${starIcons}
           ${card_data.rating}</h4>
         <div class="card-info mt-4">
@@ -178,7 +227,7 @@ function createCardHTML(card_data) {
           <span class="p-1 me-3">VIN</span>
           <div class="card-vin">Невідомий</div>
         </div>`}
-          <div class="color mt-4">Колір: ${card_data.color  ?? 'Невідомий'}</div>
+          <div class="color mt-4">Колір: ${card_data.color ?? 'Невідомий'}</div>
           <div class="contact-block mt-4">
             <a href="tel:${card_data.phone}"
               class=" btn btn-primary call-num">
@@ -187,7 +236,7 @@ function createCardHTML(card_data) {
             </a>
             <p class="mb-0">${card_data.seller}</p>
           </div>
-          <button type="button" class="save-star btn btn-secondary"><i
+          <button type="button" class="save-star btn btn-secondary ${wishListLS.includes(card_data.id) ? 'text-warning' : ''}"><i
               class="fas fa-star"></i></button>
         </div>
       </div>
@@ -195,7 +244,7 @@ function createCardHTML(card_data) {
     <div class="col-12 card-footer">
       <small class="text-muted">
         <i class="far fa-clock"></i>
-        ${card_data.timestamp}
+        ${dateFormatter.format(card_data.timestamp)} ${timeFormatter.format(card_data.timestamp)}
       </small>
       <small class="text-muted">
         <i class="fas fa-eye"></i>

@@ -147,8 +147,7 @@ li > i {
   right: 15px;
   font-size: 22px;
 }
-.save-star:hover,
-.save-star:focus-within {
+.save-star:hover{
   color: gold;
 }
 .text-muted:last-of-type {
