@@ -39,8 +39,8 @@ sortSelectEl.addEventListener('change', function () {
     console.log(this.value.split('-'));
     let [key, type] = this.value.split('-')
     CARS.sort((a,b) => {
-      if (typeof [key] === 'string') {
-        [key].toLowerCase();
+      if (typeof key === 'string') {
+        key.toLowerCase();
         a[key].localeCompare(b[key]);
       }
       else {
