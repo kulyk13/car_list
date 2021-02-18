@@ -4,18 +4,30 @@ const cardListEl = document.getElementById('cardList');
 const masonryBtnsEl = document.getElementById('masonryBtns');
 const sortSelectEl = document.getElementById('sortSelect');
 const searchFormEl = document.getElementById('searchForm');
-const dateFormatter = new Intl.DateTimeFormat()
+const dateFormatter = new Intl.DateTimeFormat();
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
   minute: '2-digit'
-})
-
+});
+const currencyUSDFormatter = new Intl.NumberFormat("ru", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 0
+});
+const currencyUAHFormatter = new Intl.NumberFormat("ru", {
+  style: "currency",
+  currency: "UAH",
+  minimumFractionDigits: 0,
+  maximumSignificantDigits: 4
+});
 
 if (!localStorage.wishList) {
   localStorage.wishList = JSON.stringify([])
-}
-const wishListLS = JSON.parse(localStorage.wishList)
-const exchangeRateUSD = 27.8569
+};
+
+const wishListLS = JSON.parse(localStorage.wishList);
+const exchangeRateUSD = 27.8569;
+
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -68,21 +80,6 @@ sortSelectEl.addEventListener('change', function () {
   renderCards(CARS, cardListEl);
 })
 
-// if (typeof CARS[0][key] === 'string') {
-//   if (type == 'ab') {
-//     CARS.sort((a,b) => a[key].localeCompare(b[key]))
-//   } else if (type == 'ba') {
-//     CARS.sort((a,b) => b[key].localeCompare(a[key]))
-//   }
-// }
-// else if (typeof CARS[0][key] === 'number'){
-//   if (type == 'ab') {
-//     CARS.sort((a,b) => a[key] - b[key])
-//   } else if (type == 'ba') {
-//     CARS.sort((a,b) => b[key] - a[key])
-//   }
-// }
-
 // Change cards view
 masonryBtnsEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.btn-change')
@@ -105,30 +102,29 @@ masonryBtnsEl.addEventListener('click', event => {
   }
 })
 
-// Event listener on save star
+// Save star
 cardListEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.save-star');
   if (btnEl) {
     console.log('click on save-star');
-    const id = btnEl.closest('.card').dataset.id
+    const id = btnEl.closest('.card').dataset.id;
     console.log(id);
     if (!wishListLS.includes(id)) {
-      wishListLS.push(id)
-      btnEl.classList.add('text-warning')
+      wishListLS.push(id);
+      btnEl.classList.add('text-warning');
     } else{
-      wishListLS.splice(wishListLS.indexOf(id),1)
-      btnEl.classList.remove('text-warning')
+      wishListLS.splice(wishListLS.indexOf(id),1);
+      btnEl.classList.remove('text-warning');
     }
-    localStorage.wishList = JSON.stringify(wishListLS)
-    btnEl.blur()
+    localStorage.wishList = JSON.stringify(wishListLS);
+    btnEl.blur();    
   }
 });
 
-// Event listener on search form
+// Search form
 searchFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
   let query = this.search.value.toLowerCase().trim().split(' ')//[mustang, ford]
-  console.log(query);
   const searchFields = ['make', 'model', 'year']
   const filteredCars = CARS.filter(car => {
     return query.every(word => {
@@ -142,7 +138,6 @@ searchFormEl.addEventListener('submit', function (event) {
 
 renderCards(CARS, cardListEl);
 
-
 function renderCards(data_array, element) {
   let html = '';
   if (data_array.length > 0) {
@@ -154,6 +149,7 @@ function renderCards(data_array, element) {
   }
   element.innerHTML = html;
 };
+
 
 
 function createCardHTML(card_data) {
@@ -181,7 +177,11 @@ function createCardHTML(card_data) {
         <a href="#" class="card-title mb-3">${card_data.make}
           ${card_data.model}
           ${card_data.engine_volume} (${card_data.year})</a>
-        <h3 class="card-price text-success">${card_data.price}  ${card_data.price * exchangeRateUSD}</h3>
+        <div class="price-block mb-2">
+          <span class="card-price text-success">${currencyUSDFormatter.format(card_data.price)}</span>
+          <span>•</span>
+          <span>${currencyUAHFormatter.format(card_data.price * exchangeRateUSD)}</span>
+        </div>
         <h4 class="card-rating text-warning">${starIcons}
           ${card_data.rating}</h4>
         <div class="card-info mt-4">
@@ -264,18 +264,6 @@ function findSiblings(DOMelement) {
   // return siblings
   return [...DOMelement.parentElement.children].filter(el => el != DOMelement)
 }
-
-
-
-
-
-
-// const arr = [5,9,4,2,10,7,11,3,1,12,6,8]
-
-// arr.sort((a,b) => {
-//   return b-a
-// })
-// console.log(arr);
 
 
 

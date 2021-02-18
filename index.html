@@ -21,10 +21,9 @@
   <div class="container">
 
     <h1 class="main-title pt-4">Car list</h1>
-    <a href="wishlist.html">To wishlist</a>
     <div class="row">
       <div class="col-12 mt-3 mb-5 pt-3 g-0 top-bar">
-        <select name="sortSelect" class="form-select" id="sortSelect"
+        <select name="sortSelect" class="form-select me-5" id="sortSelect"
           aria-label="Default select example">
           <option value="default">За замовчуванням</option>
           <option value="price-ab">Від дешевих до дорогих</option>
@@ -36,7 +35,7 @@
           <option value="odo-ba">Пробіг, по спаданню </option>
           <option value="make-ab">Марка автомобіля, a-z</option>
         </select>
-        <form action="#" class="col-6 form mx-auto" name="searchForm"
+        <form action="#" class="col-6 form me-auto" name="searchForm"
           id="searchForm">
           <div class="input-group">
             <input type="search" name="search" class="form-control"
@@ -46,7 +45,11 @@
               aria-label="search" value="hello">Пошук</button>
           </div>
         </form>
-        <div class="change-view col-2" id="masonryBtns">
+        <a href="wishlist.html" class="btn-wish btn btn-primary btn-sm">
+          <i class="far fa-star"></i>
+          To wishlist
+        </a>
+        <div class="change-view col-1" id="masonryBtns">
           <button data-action="1" type="button"
             class="btn-change btn-success btn"><i
               class="fas fa-bars"></i></button>

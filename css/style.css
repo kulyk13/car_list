@@ -42,6 +42,9 @@ li > i {
 .form-select {
   width: 25%;
 }
+.btn-wish:hover {
+  color: #ffc107;
+}
 .change-view {
   column-gap: 15px;
   display: flex;
@@ -71,6 +74,11 @@ li > i {
 }
 .card-list.row-cols-2 .card-title {
   height: 72px;
+}
+.price-block {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
 }
 .card-price {
   font-size: 24px;
@@ -147,7 +155,7 @@ li > i {
   right: 15px;
   font-size: 22px;
 }
-.save-star:hover{
+.save-star:hover {
   color: gold;
 }
 .text-muted:last-of-type {
