@@ -39,6 +39,15 @@ li > i {
   align-items: center;
   border-top: 2px solid #000;
 }
+
+/* .filter-form{
+  position: sticky;
+  top: 0;
+} */
+.filter-section{
+  max-height: 300px;
+  overflow-y: auto;
+}
 .form-select {
   width: 25%;
 }

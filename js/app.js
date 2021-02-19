@@ -1,8 +1,10 @@
 // Global variables
 let CARS = JSON.parse(DATA);
+console.log(CARS.length)
 const cardListEl = document.getElementById('cardList');
 const masonryBtnsEl = document.getElementById('masonryBtns');
 const sortSelectEl = document.getElementById('sortSelect');
+const filterFormEl = document.getElementById('filterForm');
 const searchFormEl = document.getElementById('searchForm');
 const dateFormatter = new Intl.DateTimeFormat();
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
@@ -24,9 +26,18 @@ const currencyUAHFormatter = new Intl.NumberFormat("ru", {
 if (!localStorage.wishList) {
   localStorage.wishList = JSON.stringify([])
 };
-
+const filterFields = ['make', "engine_volume",'fuel', 'transmission']
 const wishListLS = JSON.parse(localStorage.wishList);
+isWishlistPage()
+// let aa = [5,423,54,3214,454,231,21,21,54,21,54,31,5,4,3,43,5,34,654,3,321]
+// let sum = aa.reduce((sum, num) => sum + num, 0)
+// console.log(sum);
 const exchangeRateUSD = 27.8569;
+
+//
+renderCards(CARS, cardListEl);
+renderFilterPanel(CARS, filterFormEl, filterFields)
+//
 
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
@@ -52,9 +63,113 @@ const exchangeRateUSD = 27.8569;
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
 
+{/* <fieldset class="d-flex flex-column p-2 mb-3">
+            <legend>Fuel</legend>
+            <label>
+              <input type="checkbox" name="fuel" value="Benzin">
+              Benzin
+            </label>
+            <label>
+              <input type="checkbox" name="fuel" value="Diesel">
+              Diesel
+            </label>
+            <label>
+              <input type="checkbox" name="fuel" value="Propane">
+              Propane
+            </label>
+          </fieldset> */}
+
+
+
+// Filter form
+filterFormEl.addEventListener('submit', function (event) {
+  event.preventDefault();
+  console.time('filter');
+  const query = filterFields.map(field => {
+    return Array.from(this[field]).reduce((acu, currInput) => {
+      if (currInput.checked) {
+        return [...acu, currInput.value]
+      } else{
+        return acu
+      }
+    }, [])
+  })
+
+  const filteredCars = CARS.filter(car => {
+    return query.every(values => {
+      return !values.length || filterFields.some(field => {
+        return values.includes(`${car[field]}`)
+      })
+    })
+  })
+  console.timeEnd('filter');
+  renderCards(filteredCars, cardListEl);
+})
+
+
+function createFilterCheckbox(field, value) {
+  return `<label>
+  <input type="checkbox" name="${field}" value="${value}">
+  ${value}
+</label>`
+}
+function createFilterSection(field, cars) {
+  let html = ''
+  const values = new Set(cars.map(car => car[field]).sort())
+  values.forEach(value => {
+    html += createFilterCheckbox(field, value)
+  })
+  return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
+  <legend>${field}</legend>
+  ${html}
+</fieldset>`
+}
+function renderFilterPanel(cars, formEl, fields) {
+  let html = ''
+  fields.forEach(field => {
+    html += createFilterSection(field, cars)
+  })
+  formEl.insertAdjacentHTML('afterbegin', html)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Sort form
-sortSelectEl.addEventListener('change', function () {
+sortSelectEl && sortSelectEl.addEventListener('change', function () {
   if (this.value == 'default') {
     CARS = JSON.parse(DATA)
   } else {
@@ -81,7 +196,7 @@ sortSelectEl.addEventListener('change', function () {
 })
 
 // Change cards view
-masonryBtnsEl.addEventListener('click', event => {
+masonryBtnsEl && masonryBtnsEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.btn-change')
   if (btnEl) {
     let action = btnEl.dataset.action
@@ -103,7 +218,7 @@ masonryBtnsEl.addEventListener('click', event => {
 })
 
 // Save star
-cardListEl.addEventListener('click', event => {
+cardListEl && cardListEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.save-star');
   if (btnEl) {
     console.log('click on save-star');
@@ -117,7 +232,8 @@ cardListEl.addEventListener('click', event => {
       btnEl.classList.remove('text-warning');
     }
     localStorage.wishList = JSON.stringify(wishListLS);
-    btnEl.blur();    
+    btnEl.blur();
+    isWishlistPage(true)
   }
 });
 
@@ -136,7 +252,7 @@ searchFormEl.addEventListener('submit', function (event) {
   renderCards(filteredCars, cardListEl);
 })
 
-renderCards(CARS, cardListEl);
+
 
 function renderCards(data_array, element) {
   let html = '';
@@ -254,7 +370,14 @@ function createCardHTML(card_data) {
   </div>
 </div>`
 }
-
+function isWishlistPage(render) {
+  if (window.location.pathname == '/wishlist.html') {
+    CARS = wishListLS.reduce((acu, currId) => {
+      return [...acu, CARS.find(car => car.id == currId)]
+    }, [])
+  } 
+  render && renderCards(CARS, cardListEl);
+}
 //Utils
 
 function findSiblings(DOMelement) {
@@ -269,3 +392,4 @@ function findSiblings(DOMelement) {
 
 
 
+console.log();
