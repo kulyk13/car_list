@@ -26,12 +26,10 @@ const currencyUAHFormatter = new Intl.NumberFormat("ru", {
 if (!localStorage.wishList) {
   localStorage.wishList = JSON.stringify([])
 };
-const filterFields = ['make', "engine_volume",'fuel', 'transmission']
+const filterFields = ['make', "price", "engine_volume",'fuel', 'transmission']
 const wishListLS = JSON.parse(localStorage.wishList);
 isWishlistPage()
-// let aa = [5,423,54,3214,454,231,21,21,54,21,54,31,5,4,3,43,5,34,654,3,321]
-// let sum = aa.reduce((sum, num) => sum + num, 0)
-// console.log(sum);
+
 const exchangeRateUSD = 27.8569;
 
 //
@@ -84,7 +82,6 @@ renderFilterPanel(CARS, filterFormEl, filterFields)
 // Filter form
 filterFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
-  console.time('filter');
   const query = filterFields.map(field => {
     return Array.from(this[field]).reduce((acu, currInput) => {
       if (currInput.checked) {
@@ -102,16 +99,23 @@ filterFormEl.addEventListener('submit', function (event) {
       })
     })
   })
-  console.timeEnd('filter');
   renderCards(filteredCars, cardListEl);
 })
 
 
 function createFilterCheckbox(field, value) {
   return `<label>
-  <input type="checkbox" name="${field}" value="${value}">
-  ${value}
-</label>`
+    <input type="checkbox" name="${field}" value="${value}">
+    ${value}
+  </label>`
+}
+function createPriceFilter(field) {
+  return `<label class="d-flex align-items-center">
+  від
+  <input type="text" name="${field}" value="0" class="border col-4 me-3 m-2">
+  до
+  <input type="text" name="${field}" class="border col-4 m-2">
+  </label>`
 }
 function createFilterSection(field, cars) {
   let html = ''
@@ -119,52 +123,25 @@ function createFilterSection(field, cars) {
   values.forEach(value => {
     html += createFilterCheckbox(field, value)
   })
-  return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
+  if (field == "price") {
+    return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
+    <legend>${field}</legend>
+    ${createPriceFilter(field)}
+  </fieldset>`
+  } else {
+    return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
   <legend>${field}</legend>
   ${html}
 </fieldset>`
+  }
 }
 function renderFilterPanel(cars, formEl, fields) {
-  let html = ''
+  let html = '';
   fields.forEach(field => {
-    html += createFilterSection(field, cars)
-  })
-  formEl.insertAdjacentHTML('afterbegin', html)
+    html += createFilterSection(field, cars);
+  });
+  formEl.insertAdjacentHTML('afterbegin', html);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
