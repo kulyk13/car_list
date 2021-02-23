@@ -345,7 +345,9 @@ function createCardHTML(card_data) {
       </small>
     </div>
   </div>
-</div>`
+</div>
+<button type="button" class="btn btn-primary btn-sm text-center p-2 btn-more">Показати
+    ще</button>`
 }
 function isWishlistPage(render) {
   if (window.location.pathname == '/wishlist.html') {

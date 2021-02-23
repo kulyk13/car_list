@@ -165,3 +165,8 @@ li > i {
 .text-muted:last-of-type {
   margin-left: 20px;
 }
+.btn-more {
+  position: absolute;
+  bottom: -20px;
+  width: 10%;
+}
