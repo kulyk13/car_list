@@ -43,6 +43,10 @@ li > i {
   max-height: 300px;
   overflow-y: auto;
 }
+.btn-submit::after{
+  content: '(' attr(data-count) ')';
+  margin-left: 5px;
+}
 .form-select {
   width: 25%;
 }

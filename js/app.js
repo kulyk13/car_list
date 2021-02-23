@@ -6,6 +6,7 @@ const masonryBtnsEl = document.getElementById('masonryBtns');
 const sortSelectEl = document.getElementById('sortSelect');
 const filterFormEl = document.getElementById('filterForm');
 const searchFormEl = document.getElementById('searchForm');
+const seeMoreBtnEl = document.getElementById('seeMoreBtn')
 const dateFormatter = new Intl.DateTimeFormat();
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -28,7 +29,6 @@ if (!localStorage.wishList) {
 };
 const filterFields = ['make', "price", "engine_volume",'fuel', 'transmission']
 const wishListLS = JSON.parse(localStorage.wishList);
-isWishlistPage()
 
 const exchangeRateUSD = 27.8569;
 
@@ -61,29 +61,32 @@ renderFilterPanel(CARS, filterFormEl, filterFields)
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
 
-{/* <fieldset class="d-flex flex-column p-2 mb-3">
-            <legend>Fuel</legend>
-            <label>
-              <input type="checkbox" name="fuel" value="Benzin">
-              Benzin
-            </label>
-            <label>
-              <input type="checkbox" name="fuel" value="Diesel">
-              Diesel
-            </label>
-            <label>
-              <input type="checkbox" name="fuel" value="Propane">
-              Propane
-            </label>
-          </fieldset> */}
-
-
+seeMoreBtnEl.addEventListener('click', event => {
+  const btnEl = event.target.closest('.see-more-btn')
+  if (btnEl) {
+    console.log('click on seemore btn!');
+    renderCards(CARS, cardListEl);
+  }
+})
 
 // Filter form
+filterFormEl.btnSubmit.dataset.count = CARS.length
 filterFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
+  CARS = filterCars(this)
+  renderCards(CARS, cardListEl, true);
+})
+filterFormEl.addEventListener('change', function (event) {
+  console.log(filterCars(this).length);
+  this.btnSubmit.dataset.count = filterCars(this).length
+})
+
+function filterCars(form) {
   const query = filterFields.map(field => {
-    return Array.from(this[field]).reduce((acu, currInput) => {
+    return Array.from(form[field]).reduce((acu, currInput) => {
+      if (field === 'price') {
+        return [...acu, +currInput.value]
+      }
       if (currInput.checked) {
         return [...acu, currInput.value]
       } else{
@@ -91,17 +94,19 @@ filterFormEl.addEventListener('submit', function (event) {
       }
     }, [])
   })
-
-  const filteredCars = CARS.filter(car => {
+  return JSON.parse(DATA).filter(car => {
     return query.every(values => {
       return !values.length || filterFields.some(field => {
-        return values.includes(`${car[field]}`)
+        const carValue = `${car[field]}`
+        if (typeof values[0] === 'number') {
+          return carValue >= values[0] && carValue <= values[1]
+        } else{
+          return values.includes(carValue)
+        }
       })
     })
   })
-  renderCards(filteredCars, cardListEl);
-})
-
+}
 
 function createFilterCheckbox(field, value) {
   return `<label>
@@ -109,31 +114,30 @@ function createFilterCheckbox(field, value) {
     ${value}
   </label>`
 }
-function createPriceFilter(field) {
+function createPriceFilter(field, range) {
   return `<label class="d-flex align-items-center">
   від
-  <input type="text" name="${field}" value="0" class="border col-4 me-3 m-2">
+  <input type="number" name="${field}" value="${range[0]}" min="${range[0]}" max="${range[1] - 1}" step="1" class="border col-4 me-3 m-2">
   до
-  <input type="text" name="${field}" class="border col-4 m-2">
+  <input type="number" name="${field}" value="${range[1]}" min="${range[0] + 1}" max="${range[1]}" step="" class="border col-4 m-2">
   </label>`
 }
 function createFilterSection(field, cars) {
   let html = ''
-  const values = new Set(cars.map(car => car[field]).sort())
-  values.forEach(value => {
-    html += createFilterCheckbox(field, value)
-  })
-  if (field == "price") {
-    return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
-    <legend>${field}</legend>
-    ${createPriceFilter(field)}
-  </fieldset>`
-  } else {
-    return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
+  const values = cars.map(car => car[field]).sort()
+  if (field === 'price') {
+    const range = [Math.min(...values), Math.max(...values)]
+    html += createPriceFilter(field, range)
+  } else{
+    new Set(values).forEach(value => {
+      html += createFilterCheckbox(field, value)
+    })
+  }
+  
+  return `<fieldset class="filter-section d-flex flex-column p-1 mb-3">
   <legend>${field}</legend>
   ${html}
 </fieldset>`
-  }
 }
 function renderFilterPanel(cars, formEl, fields) {
   let html = '';
@@ -169,7 +173,7 @@ sortSelectEl && sortSelectEl.addEventListener('change', function () {
     }
     console.timeEnd('sorting ->>')
   }
-  renderCards(CARS, cardListEl);
+  renderCards(CARS, cardListEl, true);
 })
 
 // Change cards view
@@ -210,7 +214,6 @@ cardListEl && cardListEl.addEventListener('click', event => {
     }
     localStorage.wishList = JSON.stringify(wishListLS);
     btnEl.blur();
-    isWishlistPage(true)
   }
 });
 
@@ -219,28 +222,44 @@ searchFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
   let query = this.search.value.toLowerCase().trim().split(' ')//[mustang, ford]
   const searchFields = ['make', 'model', 'year']
-  const filteredCars = CARS.filter(car => {
+  CARS = JSON.parse(DATA).filter(car => {
     return query.every(word => {
       return !word || searchFields.some(field => {
         return `${car[field]}`.toLowerCase().trim().includes(word)
       })
     })
   })
-  renderCards(filteredCars, cardListEl);
+  console.log('search result', CARS.length);
+  renderCards(CARS, cardListEl, true);
 })
 
 
 
-function renderCards(data_array, element) {
+function renderCards(data_array, element, clear) {
+  let count = 10
   let html = '';
+  if (clear) {
+    element.innerHTML = ''
+  }
+  let elems = element.children.length
+  if (count + elems >= data_array.length) {
+    seeMoreBtnEl.classList.add('d-none')
+  } else{
+    seeMoreBtnEl.classList.remove('d-none')
+  }
   if (data_array.length > 0) {
-    data_array.forEach(car => {
-      html += createCardHTML(car)
-    });
+    for (let i = 0; i < count; i++) {
+      const car = data_array[elems + i];
+      if (car) {
+        html += createCardHTML(car)
+      } else{
+        break
+      }
+    }
   } else {
     html = `<h2 class="text-center text-danger">No cars! :((</h2>`
   }
-  element.innerHTML = html;
+  element.insertAdjacentHTML('beforeEnd', html)
 };
 
 
@@ -346,17 +365,9 @@ function createCardHTML(card_data) {
     </div>
   </div>
 </div>
-<button type="button" class="btn btn-primary btn-sm text-center p-2 btn-more">Показати
-    ще</button>`
+`
 }
-function isWishlistPage(render) {
-  if (window.location.pathname == '/wishlist.html') {
-    CARS = wishListLS.reduce((acu, currId) => {
-      return [...acu, CARS.find(car => car.id == currId)]
-    }, [])
-  } 
-  render && renderCards(CARS, cardListEl);
-}
+
 //Utils
 
 function findSiblings(DOMelement) {
