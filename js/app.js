@@ -1,6 +1,8 @@
 // Global variables
-let CARS = JSON.parse(DATA);
+let DATA = []
+let CARS = []
 console.log(CARS.length)
+const loadingSpinnerEl = document.getElementById('loadingSpinner')
 const cardListEl = document.getElementById('cardList');
 const masonryBtnsEl = document.getElementById('masonryBtns');
 const sortSelectEl = document.getElementById('sortSelect');
@@ -33,8 +35,20 @@ const wishListLS = JSON.parse(localStorage.wishList);
 const exchangeRateUSD = 27.8569;
 
 //
-renderCards(CARS, cardListEl);
-renderFilterPanel(CARS, filterFormEl, filterFields)
+getData()
+
+async function getData() {
+  setLoading(true)
+  const data = await fetch('/data/cars.json').then(r => r.json())
+  setLoading(false)
+  DATA = data
+  CARS = DATA
+  renderCards(CARS, cardListEl);
+  renderFilterPanel(CARS, filterFormEl, filterFields)
+}
+function setLoading(status) {
+    loadingSpinnerEl.classList.toggle('d-none', !status)
+}
 //
 
 // {
@@ -94,7 +108,7 @@ function filterCars(form) {
       }
     }, [])
   })
-  return JSON.parse(DATA).filter(car => {
+  return DATA.filter(car => {
     return query.every(values => {
       return !values.length || filterFields.some(field => {
         const carValue = `${car[field]}`
@@ -152,7 +166,7 @@ function renderFilterPanel(cars, formEl, fields) {
 // Sort form
 sortSelectEl && sortSelectEl.addEventListener('change', function () {
   if (this.value == 'default') {
-    CARS = JSON.parse(DATA)
+    CARS = DATA
   } else {
     console.log(this.value.split('-'));
     let [key, type] = this.value.split('-')
@@ -222,7 +236,7 @@ searchFormEl.addEventListener('submit', function (event) {
   event.preventDefault();
   let query = this.search.value.toLowerCase().trim().split(' ')//[mustang, ford]
   const searchFields = ['make', 'model', 'year']
-  CARS = JSON.parse(DATA).filter(car => {
+  CARS = DATA.filter(car => {
     return query.every(word => {
       return !word || searchFields.some(field => {
         return `${car[field]}`.toLowerCase().trim().includes(word)
