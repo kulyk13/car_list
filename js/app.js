@@ -34,7 +34,7 @@ const wishListLS = JSON.parse(localStorage.wishList);
 
 const exchangeRateUSD = 27.8569;
 
-//
+
 getData()
 
 async function getData() {
@@ -49,7 +49,17 @@ async function getData() {
 function setLoading(status) {
     loadingSpinnerEl.classList.toggle('d-none', !status)
 }
-//
+
+
+
+async function getExchangeCours(cost) {
+  const response = await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
+  const json = await response.json();
+  let price = cost * json[0].sale;
+  console.log(price);
+  return price;
+}
+
 
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
@@ -307,6 +317,7 @@ function createCardHTML(card_data) {
           <span class="card-price text-success">${currencyUSDFormatter.format(card_data.price)}</span>
           <span>•</span>
           <span>${currencyUAHFormatter.format(card_data.price * exchangeRateUSD)}</span>
+          <span>${getExchangeCours(card_data.price)}</span>
         </div>
         <h4 class="card-rating text-warning">${starIcons}
           ${card_data.rating}</h4>
