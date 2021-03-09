@@ -32,17 +32,19 @@ if (!localStorage.wishList) {
 const filterFields = ['make', "price", "engine_volume",'fuel', 'transmission']
 const wishListLS = JSON.parse(localStorage.wishList);
 
-const exchangeRateUSD = 27.9;
+let exchangeRateUSD = 0;
 
 
 getData()
 
 async function getData() {
   setLoading(true)
-  const data = await fetch('../data/cars.json').then(r => r.json())
+  const data = await fetch('./data/cars.json').then(r => r.json())
+  const rate = await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5').then(r => r.json())
   setLoading(false)
-  DATA = data
-  CARS = DATA
+  DATA = data;
+  CARS = DATA;
+  exchangeRateUSD = rate[0].sale;
   renderCards(CARS, cardListEl);
   renderFilterPanel(CARS, filterFormEl, filterFields)
 }
@@ -50,15 +52,6 @@ function setLoading(status) {
     loadingSpinnerEl.classList.toggle('d-none', !status)
 }
 
-getExchangeCours(10)
-
-async function getExchangeCours(cost) {
-  const response = await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
-  const json = await response.json();
-  let price = cost * json[0].sale;
-  console.log(price);
-  return price;
-}
 
 
 // {
@@ -317,7 +310,6 @@ function createCardHTML(card_data) {
           <span class="card-price text-success">${currencyUSDFormatter.format(card_data.price)}</span>
           <span>•</span>
           <span>${currencyUAHFormatter.format(card_data.price * exchangeRateUSD)}</span>
-          <span>${getExchangeCours(card_data.price)}</span>
         </div>
         <h4 class="card-rating text-warning">${starIcons}
           ${card_data.rating}</h4>
