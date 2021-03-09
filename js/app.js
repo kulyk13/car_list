@@ -32,14 +32,14 @@ if (!localStorage.wishList) {
 const filterFields = ['make', "price", "engine_volume",'fuel', 'transmission']
 const wishListLS = JSON.parse(localStorage.wishList);
 
-const exchangeRateUSD = 27.8569;
+const exchangeRateUSD = 27.9;
 
 
 getData()
 
 async function getData() {
   setLoading(true)
-  const data = await fetch('/data/cars.json').then(r => r.json())
+  const data = await fetch('../data/cars.json').then(r => r.json())
   setLoading(false)
   DATA = data
   CARS = DATA
@@ -50,7 +50,7 @@ function setLoading(status) {
     loadingSpinnerEl.classList.toggle('d-none', !status)
 }
 
-
+getExchangeCours(10)
 
 async function getExchangeCours(cost) {
   const response = await fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
@@ -402,9 +402,3 @@ function findSiblings(DOMelement) {
   // return siblings
   return [...DOMelement.parentElement.children].filter(el => el != DOMelement)
 }
-
-
-
-
-
-console.log();
